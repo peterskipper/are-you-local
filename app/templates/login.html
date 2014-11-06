@@ -9,6 +9,9 @@
         <label for="password">Password</label>
         <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
     </div>
-    <button type="submit" class="btn btn-default">Submit</button>
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+<div>
+    <a href="{{ url_for('register_get') }}" class="btn btn-default" role="button">Create Account</a> 
+</div>
 {% endblock %}
