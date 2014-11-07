@@ -1,9 +1,12 @@
+import urllib
+import json
+import decimal
 from flask import render_template, url_for, request, flash, redirect
 from flask.ext.login import login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from app import app
 from database import session
-from models import User
+from models import User, POI
 from forms import LoginForm, RegistrationForm, POIForm
 
 # Helper func for the views with forms
@@ -12,6 +15,21 @@ def flash_errors(form):
     for field, errors in form.errors.items():
         for error in errors:
             flash(u"Error in the {} field - {}".format(getattr(form, field).label.text, error), 'danger')
+
+#Helper func to get Lat/Long from address
+def geocode(address):
+    address = urllib.quote_plus(address)
+    print address
+    request = ("http://maps.googleapis.com/maps/api/geocode/json?address={}&"
+        "sensor=false".format(address))
+    data = json.loads(urllib.urlopen(request).read())
+    print data
+    if data['status'] == 'OK':
+        lat = data['results'][0]['geometry']['location']['lat']
+        lng = data['results'][0]['geometry']['location']['lng']
+        return decimal.Decimal(lat), decimal.Decimal(lng)
+    else:
+        return '',''
 
 @app.route('/')
 def index():
@@ -79,3 +97,24 @@ def add_poi_get():
 @app.route('/add_poi', methods=['POST'])
 def add_poi_post():
     form = POIForm(request.form)
+    if form.validate():
+        lat, lng = geocode(form.address.data)
+        if lat and lng:
+            poi = POI(name=form.name.data,
+                category=form.category.data,
+                address=form.address.data,
+                latitude=lat,
+                longitude=lng,
+                desc=form.desc.data)
+            session.add(poi)
+            session.commit()
+            flash('You added a new place!', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('Google Maps could not find that address. Try again!',
+                'warning')
+            return render_template('add_poi.html', form=form)
+
+    else:
+        flash_errors(form)
+        return render_template('add_poi.html', form=form)

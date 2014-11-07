@@ -20,7 +20,8 @@ class LoginForm(Form):
 class POIForm(Form):
     name = TextField('Name', [validators.InputRequired()])
     category = RadioField('Category', choices=[(0, 'Food'), (1, 'Drink'),
-        (2, 'Active/Outdoors'), (3, 'Arts & Entertainment'), (4, 'Other')])
+        (2, 'Active/Outdoors'), (3, 'Arts & Entertainment'), (4, 'Other')],
+        coerce=int)
     address = TextField('Address', [validators.InputRequired()])
     desc = TextAreaField('Description', [validators.InputRequired()],
         default='Tell users at least a sentence or two about this place!')
