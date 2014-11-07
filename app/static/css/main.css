@@ -11,7 +11,11 @@ dl > dt {
     padding: 2px;
 }
 
-.buttonbottom {
+/*.buttonbottom {
+  margin-bottom: 10px;
+}
+*/
+#content {
   margin-bottom: 10px;
 }
 

@@ -60,7 +60,19 @@ class POI(Base):
     desc = Column(String, nullable=False)
 
     def __repr__(self):
-        print 'POI id is {}, name is {}, address is {}, latitude is {}, longitude is {}, and description is {}'.format(self.id, self.name, self.address, self.latitude, self.longitude, self.desc)
+        return ('POI id is {}, '
+            'name is {}, '
+            'address is {}, '
+            'latitude is {}, '
+            'longitude is {}, '
+            'and description is {}'.format(
+                self.id,
+                self.name,
+                self.address,
+                self.latitude,
+                self.longitude,
+                self.desc)
+            )
 
 #CHECK: Is this the appropriate place to create tables? Remove Drop Tables
 #Base.metadata.drop_all(engine)
