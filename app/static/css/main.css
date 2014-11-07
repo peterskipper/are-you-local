@@ -11,10 +11,10 @@ dl > dt {
     padding: 2px;
 }
 
-/*.buttonbottom {
-  margin-bottom: 10px;
+.nav-pills > li {
+  margin-top: 8px;
 }
-*/
+
 #content {
   margin-bottom: 10px;
 }
