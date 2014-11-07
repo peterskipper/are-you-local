@@ -1,12 +1,10 @@
-from pprint import pprint as pp
-from pprint import pformat as pf
 from flask import render_template, url_for, request, flash, redirect
 from flask.ext.login import login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from app import app
 from database import session
 from models import User
-from forms import LoginForm, RegistrationForm
+from forms import LoginForm, RegistrationForm, POIForm
 
 # Helper func for the views with forms
 def flash_errors(form):
@@ -55,17 +53,16 @@ def register_get():
 def register_post():
     form = RegistrationForm(request.form)
     if form.validate():
-        if form.fname.data or form.lname.data:
-            user = User(username=form.username.data,
-                email=form.email.data,
-                realname=form.fname.data+form.lname.data,
-                password=generate_password_hash(form.password.data)
-                )
-        else:
-            user = User(username=form.username.data,
+        user = User(username=form.username.data,
                 email=form.email.data,
                 password=generate_password_hash(form.password.data)
                 )
+        if form.fname.data and form.lname.data:
+            user.realname = form.fname.data + form.lname.data
+        elif form.fname.data:
+            user.realname = form.fname.data
+        elif form.lname.data:
+            user.realname = form.lname.data
         session.add(user)
         session.commit()
         flash('Thanks for registering!', 'success')
@@ -73,3 +70,12 @@ def register_post():
     else:
         flash_errors(form)
         return render_template('register.html', form=form)
+
+@app.route('/add_poi', methods=['GET'])
+def add_poi_get():
+    form = POIForm(request.args, category=0)
+    return render_template('add_poi.html', form=form)
+
+@app.route('/add_poi', methods=['POST'])
+def add_poi_post():
+    form = POIForm(request.form)

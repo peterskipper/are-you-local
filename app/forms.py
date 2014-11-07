@@ -1,4 +1,4 @@
-from wtforms import Form, TextField, PasswordField, validators
+from wtforms import Form, TextField, TextAreaField, RadioField, PasswordField, validators
 
 class RegistrationForm(Form):
     username = TextField('Username', [validators.Length(min=3), 
@@ -16,3 +16,11 @@ class RegistrationForm(Form):
 class LoginForm(Form):
     name = TextField('Username or Email', [validators.InputRequired()])
     password = PasswordField('Password', [validators.InputRequired()])
+
+class POIForm(Form):
+    name = TextField('Name', [validators.InputRequired()])
+    category = RadioField('Category', choices=[(0, 'Food'), (1, 'Drink'),
+        (2, 'Active/Outdoors'), (3, 'Arts & Entertainment'), (4, 'Other')])
+    address = TextField('Address', [validators.InputRequired()])
+    desc = TextAreaField('Description', [validators.InputRequired()],
+        default='Tell users at least a sentence or two about this place!')

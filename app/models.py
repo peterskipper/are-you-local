@@ -18,7 +18,7 @@ class User(Base, UserMixin):
     id = Column(Integer, Sequence('user_id_sequence'), primary_key=True)
     username = Column(String, nullable=False, unique=True)
     email = Column(String, nullable=False, unique=True)
-    realname = Column(String, nullable=True)
+    realname = Column(String, nullable=True, default='')
     password = Column(String, nullable=False)
     pois = relationship('UserPOI', backref='user')
 
@@ -53,6 +53,7 @@ class POI(Base):
     #database fields
     id = Column(Integer, Sequence('poi_id_sequence'), primary_key=True)
     name = Column(String, nullable=False)
+    category = Column(Integer, nullable=False) 
     address = Column(String, nullable=False)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)

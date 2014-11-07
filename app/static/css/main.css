@@ -10,6 +10,11 @@ body {
 dl > dt {
     padding: 2px;
 }
+
+.buttonbottom {
+  margin-bottom: 10px;
+}
+
 #createaccount {
     position: absolute;
     padding-left: 200px;

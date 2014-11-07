@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% from "macros.html" import render_field %}
+{% block content %}
+<form role="form" action="/add_poi" method="POST">
+    <h4>Add A Place</h4>
+    <dl>
+        {{ render_field(form.name, size=80) }}
+        {{ render_field(form.address, size=80) }}
+        {{ render_field(form.category) }}
+        {{ render_field(form.desc, rows=10, cols=80) }}
+    </dl>
+    <button type="submit" class="btn btn-primary buttonbottom">Add Place</button>
+</form>
+{% endblock %}
