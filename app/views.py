@@ -1,6 +1,8 @@
+from pprint import pprint as pp
+from pprint import pformat as pf
 from flask import render_template, url_for, request, flash, redirect
 from flask.ext.login import login_user, logout_user
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from app import app
 from database import session
 from models import User
@@ -30,7 +32,6 @@ def login_post():
     user = session.query(User).filter_by(username=name).first()
     if not user: # Try to find user via email
         user = session.query(User).filter_by(email=name).first()
-
     # If we STILL can't find user, or if password doesn't match, redirect
     if not user or not check_password_hash(user.password, password):
         flash('Incorrect username/email or password', 'danger')
@@ -58,15 +59,15 @@ def register_post():
             user = User(username=form.username.data,
                 email=form.email.data,
                 realname=form.fname.data+form.lname.data,
-                password=form.password.data)
+                password=generate_password_hash(form.password.data)
+                )
         else:
             user = User(username=form.username.data,
                 email=form.email.data,
-                password=form.password.data)
+                password=generate_password_hash(form.password.data)
+                )
         session.add(user)
         session.commit()
-        import pdb
-        pdb.set_trace()
         flash('Thanks for registering!', 'success')
         return redirect(url_for('login_get'))
     else:

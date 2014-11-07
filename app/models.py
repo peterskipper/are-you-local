@@ -23,7 +23,18 @@ class User(Base, UserMixin):
     pois = relationship('UserPOI', backref='user')
 
     def __repr__(self):
-        print 'User id is {}, username is {}, user email is {} and user real name is {}'.format(self.id, self.username, self.email, str(self.realname))
+        return ('User id is {}, '
+            'username is {}, '
+            'user email is {}, '
+            'user real name is {}, '
+            'user password is {}'.format(
+                self.id, 
+                self.username, 
+                self.email, 
+                self.realname,
+                self.password
+                )
+            )
 
 
 class UserPOI(Base):
