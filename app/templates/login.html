@@ -1,17 +1,16 @@
 {% extends "base.html" %}
+{% from "macros.html" import render_field %}
 {% block content %}
-<form role="form" method="POST">
-    <div class="form-group">
-        <label for="email">Email address or Username</label>
-        <input type="email" class="form-control" id="email" name="email" placeholder="Email address" required>
-    </div>
-    <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+<form role="form" action= "/login" method="POST">
+    <h4>Login</h4>
+    <dl>
+        {{ render_field(form.name) }}
+        {{ render_field(form.password) }}
+    </dl>  
+    <button type="submit" class="btn btn-primary">Login</button>
 </form>
-<div>
+<div id="createaccount">
+    <h4>Or you could...</h4>
     <a href="{{ url_for('register_get') }}" class="btn btn-default" role="button">Create Account</a> 
 </div>
 {% endblock %}

@@ -23,7 +23,7 @@ class User(Base, UserMixin):
     pois = relationship('UserPOI', backref='user')
 
     def __repr__(self):
-        print 'User id is {}, username is {}, user email is {} and user real name is {}'.format(self.id, self.username, self.email, self.realname)
+        print 'User id is {}, username is {}, user email is {} and user real name is {}'.format(self.id, self.username, self.email, str(self.realname))
 
 
 class UserPOI(Base):
@@ -50,5 +50,6 @@ class POI(Base):
     def __repr__(self):
         print 'POI id is {}, name is {}, address is {}, latitude is {}, longitude is {}, and description is {}'.format(self.id, self.name, self.address, self.latitude, self.longitude, self.desc)
 
-#CHECK: Is this the appropriate place to create tables?
+#CHECK: Is this the appropriate place to create tables? Remove Drop Tables
+#Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)

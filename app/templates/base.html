@@ -15,6 +15,11 @@
     <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
     <!-- Bootstrap -->
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <!-- Google Maps API -->
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKebFAfOKsa5FAhljjyM2iJPd4nF6eBmk">
+    </script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
 </head>
 <body>
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -32,7 +37,7 @@
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav nav-pills">
-                    <li class="active"><a href="">Home</a></li>
+                    <li class="active"><a href="{{url_for('index')}}">Home</a></li>
                     {% if current_user.is_authenticated() %}
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>
                     {% else %}

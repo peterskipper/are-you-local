@@ -1,8 +1,26 @@
 body {
-  padding-top: 65px;
+  padding-top: 70px;
 }
 @media (max-width: 979px) {
   body {
     padding-top: 0px;
   }
+}
+
+dl > dt {
+    padding: 2px;
+}
+#createaccount {
+    position: absolute;
+    padding-left: 200px;
+    margin-top: -215px;
+}
+
+.disp-none {
+    display: none;
+}
+
+#map-canvas {
+    height: 500px;
+    padding: 5px;
 }
