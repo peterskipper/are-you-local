@@ -59,6 +59,17 @@ class POI(Base):
     longitude = Column(Float, nullable=False)
     desc = Column(String, nullable=False)
 
+    def as_dictionary(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "category": self.category,
+            "address": self.address,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "desc": self.desc
+        }
+
     def __repr__(self):
         return ('POI id is {}, '
             'name is {}, '
