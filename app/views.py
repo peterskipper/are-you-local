@@ -35,9 +35,9 @@ def geocode(address):
 def index():
     poi_list =[]
     pois = session.query(POI).all()
-    import pdb
-    pdb.set_trace()
-    return render_template('index.html')
+    for poi in pois:
+        poi_list.append(json.dumps(poi.as_dictionary()))
+    return render_template('index.html', poi_list=poi_list)
 
 @app.route('/login', methods=['GET'])
 def login_get():

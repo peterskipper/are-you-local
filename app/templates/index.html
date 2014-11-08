@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
+<!-- Google Maps API -->
+<script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKebFAfOKsa5FAhljjyM2iJPd4nF6eBmk">
+    </script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
 <div id="map-canvas"></div>
+<script type="text/javascript">
+    poi_list = {{ poi_list|safe }};
+</script>
 <script type="text/javascript">
     var mapOptions = {
       center: { lat: 34.005, lng: -118.25},
@@ -8,6 +16,15 @@
     };
     var map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
-    
+    for (var i = 0; i < poi_list.length; i++) {
+        var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(poi_list[i]["latitude"], poi_list[i]["longitude"]),
+            map: map,
+            title: poi_list[i]["name"],
+            icon: "{{ url_for('static', filename='images/" + poi_list["category"] + ")}}"
+
+        })
+    }
+
 </script>
 {% endblock %}

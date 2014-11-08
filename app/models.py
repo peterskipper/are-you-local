@@ -53,7 +53,7 @@ class POI(Base):
     #database fields
     id = Column(Integer, Sequence('poi_id_sequence'), primary_key=True)
     name = Column(String, nullable=False)
-    category = Column(Integer, nullable=False) 
+    category = Column(String, nullable=False) 
     address = Column(String, nullable=False)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
@@ -86,5 +86,5 @@ class POI(Base):
             )
 
 #CHECK: Is this the appropriate place to create tables? Remove Drop Tables
-#Base.metadata.drop_all(engine)
+Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
