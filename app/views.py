@@ -36,8 +36,8 @@ def index():
     poi_list =[]
     pois = session.query(POI).all()
     for poi in pois:
-        poi_list.append(json.dumps(poi.as_dictionary()))
-    return render_template('index.html', poi_list=poi_list)
+        poi_list.append(poi.as_dictionary())
+    return render_template('index.html', poi_list=json.dumps(poi_list))
 
 @app.route('/login', methods=['GET'])
 def login_get():

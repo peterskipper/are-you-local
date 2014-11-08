@@ -3,7 +3,7 @@
 from flask import url_for
 from flask.ext.login import UserMixin
 from sqlalchemy import Column, Boolean, Integer, Float, String, Sequence, ForeignKey, Table
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 from app import app
 from database import Base, engine
@@ -20,7 +20,6 @@ class User(Base, UserMixin):
     email = Column(String, nullable=False, unique=True)
     realname = Column(String, nullable=True, default='')
     password = Column(String, nullable=False)
-    pois = relationship('UserPOI', backref='user')
 
     def __repr__(self):
         return ('User id is {}, '
@@ -42,8 +41,9 @@ class UserPOI(Base):
     user_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
     poi_id = Column(Integer, ForeignKey('poi.id'), primary_key=True)
     upvote = Column(Boolean)
-    poi = relationship('POI', backref='user_assocs')
-
+    user = relationship('User', backref=backref('poi_assocs'))
+    poi = relationship('POI', backref=backref('user_assocs'))
+    
 class POI(Base):
     """
     Domain model for a Point of Interest (POI)
@@ -85,6 +85,4 @@ class POI(Base):
                 self.desc)
             )
 
-#CHECK: Is this the appropriate place to create tables? Remove Drop Tables
-Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
