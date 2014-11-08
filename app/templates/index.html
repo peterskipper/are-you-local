@@ -8,7 +8,8 @@
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places"></script> -->
 <div id="map-canvas"></div>
 <script type="text/javascript">
-    poi_list = $.parseJSON({{ poi_list }});
+    poi_list = {{ poi_list|safe }};
+    poi_list = $.parseJSON(poi_list);
 </script>
 <script type="text/javascript">
     var mapOptions = {
@@ -22,7 +23,7 @@
             position: new google.maps.LatLng(poi_list[i]["latitude"], poi_list[i]["longitude"]),
             map: map,
             title: poi_list[i]["name"],
-            icon: "{{ url_for('static', filename='images/" + poi_list[i]["category"] + "_unvis.png')}}"
+            icon: "{{ url_for('static', filename='images/')}}" + poi_list[i]["category"] + "_unvis.png"
 
         });
     }
