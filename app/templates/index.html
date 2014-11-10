@@ -17,7 +17,7 @@
 
     var createMarkerClickListener = function(map, marker, poi) {
         return function() {
-            var content = '<div class="info-window-content">'+
+            var shortContent = '<div id="info-window-content">'+
             '<h3>' + poi["name"] + '</h3>' +
             '<span class="info-window-category">' + 
             poi["category"] + '</span>' +
@@ -27,23 +27,44 @@
             poi["desc"] + '</p>' +
             '<input type="checkbox" id="info-window-vis-checkbox"/>' + 
             '<span id="info-window-vis-text">I&#39ve been here!</span> ' +
-            '<div id="info-window-upvote" style="display:none">' +
+            '</div>'
+
+            var longContent = '<div id="info-window-content">'+
+            '<h3>' + poi["name"] + '</h3>' +
+            '<span class="info-window-category">' + 
+            poi["category"] + '</span>' +
+            '<h5 class="info-window-address">' + 
+            poi["address"] + '</h5>' +
+            '<p class="info-window-desc">' +
+            poi["desc"] + '</p>' +
+            '<input type="checkbox" id="info-window-vis-checkbox" checked />' + 
+            '<span id="info-window-vis-text">I&#39ve been here!</span> ' +
+            '<div id="info-window-upvote">' +
             '<h6>Upvote?</h6>' +
-            '<input type="radio" name="upvote" checked/>' +
+            '<form action="/index" method="POST">' +
+            '<input type="radio" name="upvote" value= "1" checked/>' +
             '<span>It Was Awesome!</span>' +
-            '<input type="radio" name="upvote"/>' +
-            '<span>Nope</span>' +
+            '<input type="radio" name="upvote" value="0"/>' +
+            '<span>Nope</span><br />' +
+            '<button type="submit" class="btn btn-primary btn-sm">' +
+            'Submit</button>' +
+            '</form>'
             '</div>' +
             '</div>'
 
-            var infoWindow = new google.maps.InfoWindow({
-                content: content
-            });
+            var infoWindow = new google.maps.InfoWindow();
+            infoWindow.setContent(shortContent);
 
             google.maps.event.addListener(infoWindow, 'domready', function() {
-                $('#info-window-vis-checkbox').click(function() {
-                $('#info-window-upvote').toggle(this.checked);
-            });
+                $('#info-window-vis-checkbox').click(function(event) {
+                    if (this.checked) {
+                        infoWindow.setContent(longContent);   
+                    }
+                    else {
+                        infoWindow.setContent(shortContent);
+                    }
+                                    
+                });
             });
             
 
