@@ -33,3 +33,33 @@ dl > dt {
     height: 500px;
     padding: 5px;
 }
+
+#info-window-content > form > span {
+  border: 2px solid;
+}
+
+.info-window-category {
+  position: relative;
+  float: right;
+  margin-top: -30px;
+}
+
+#info-window-vis-text {
+  padding-left: 4px;
+}
+
+.info-window-form-span {
+  margin-left: 4px;
+  margin-right: 30px;
+}
+
+input.info-window-form-input {
+  margin-left: 1px;
+}
+
+button.info-window {
+  margin-top: 10px;
+}
+
+
+

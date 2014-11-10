@@ -18,9 +18,9 @@
     var createMarkerClickListener = function(map, marker, poi) {
         return function() {
             var shortContent = '<div id="info-window-content">'+
-            '<h3>' + poi["name"] + '</h3>' +
+            '<h4>' + poi["name"] + '</h4>' +
             '<span class="info-window-category">' + 
-            poi["category"] + '</span>' +
+            poi["category"].toUpperCase() + '</span>' +
             '<h5 class="info-window-address">' + 
             poi["address"] + '</h5>' +
             '<p class="info-window-desc">' +
@@ -30,9 +30,9 @@
             '</div>'
 
             var longContent = '<div id="info-window-content">'+
-            '<h3>' + poi["name"] + '</h3>' +
+            '<h4>' + poi["name"] + '</h4>' +
             '<span class="info-window-category">' + 
-            poi["category"] + '</span>' +
+            poi["category"].toUpperCase() + '</span>' +
             '<h5 class="info-window-address">' + 
             poi["address"] + '</h5>' +
             '<p class="info-window-desc">' +
@@ -42,11 +42,11 @@
             '<div id="info-window-upvote">' +
             '<h6>Upvote?</h6>' +
             '<form action="/index" method="POST">' +
-            '<input type="radio" name="upvote" value= "1" checked/>' +
-            '<span>It Was Awesome!</span>' +
-            '<input type="radio" name="upvote" value="0"/>' +
-            '<span>Nope</span><br />' +
-            '<button type="submit" class="btn btn-primary btn-sm">' +
+            '<input type="radio" name="upvote" value= "1" class="info-window-form-input" checked/>' +
+            '<span class="info-window-form-span">It Was Awesome!</span>' +
+            '<input type="radio" name="upvote" value="0" class="info-window-form-input"/>' +
+            '<span class="info-window-form-span">Nope</span><br />' +
+            '<button type="submit" class="btn btn-primary btn-sm info-window">' +
             'Submit</button>' +
             '</form>'
             '</div>' +
@@ -58,10 +58,13 @@
             google.maps.event.addListener(infoWindow, 'domready', function() {
                 $('#info-window-vis-checkbox').click(function(event) {
                     if (this.checked) {
-                        infoWindow.setContent(longContent);   
+                        infoWindow.setContent(longContent);
+                        var newPos = new google.maps.LatLng(marker.getPosition().lat()+0.1, marker.getPosition().lng());
+                        map.panTo(newPos);   
                     }
                     else {
                         infoWindow.setContent(shortContent);
+                        map.panTo(marker.getPosition())
                     }
                                     
                 });
@@ -69,6 +72,7 @@
             
 
             infoWindow.open(map, marker);
+
         };
     };
 
