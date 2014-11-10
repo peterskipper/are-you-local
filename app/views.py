@@ -39,7 +39,7 @@ def index():
         poi_list.append(poi.as_dictionary())
 
     visited_list = []
-    if current_user.is_authenticated:
+    if not current_user.is_anonymous():
         user = session.query(User).get(int(current_user.get_id()))
         for assoc in user.poi_assocs:
             visited_list.append(assoc.poi_id)
