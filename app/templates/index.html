@@ -7,7 +7,11 @@
 <div id="map-canvas"></div>
 <script type="text/javascript">
     poi_list = {{ poi_list|safe }};
-    poi_list = $.parseJSON(poi_list);
+    poi_list = $.parseJSON(poi_list);  
+</script>
+<script type="text/javascript">
+    visited_list = {{ visited_list|safe }};
+    visited_list = $.parseJSON(visited_list);
 </script>
 <script type="text/javascript">
 
@@ -55,11 +59,18 @@
     var map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
     for (var i = 0; i < poi_list.length; i++) {
+        var img_suffix;
+        if (visited_list.indexOf(poi_list[i]["id"]) > -1) {
+            img_suffix = "_vis.png";
+        }
+        else {
+            img_suffix = "_unvis.png"
+        }
         var marker = new google.maps.Marker({
             position: new google.maps.LatLng(poi_list[i]["latitude"], poi_list[i]["longitude"]),
             map: map,
             title: poi_list[i]["name"],
-            icon: "{{ url_for('static', filename='images/')}}" + poi_list[i]["category"] + "_unvis.png"
+            icon: "{{ url_for('static', filename='images/')}}" + poi_list[i]["category"] + img_suffix
 
         });
 

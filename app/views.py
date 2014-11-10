@@ -2,7 +2,7 @@ import urllib
 import json
 import decimal
 from flask import render_template, url_for, request, flash, redirect
-from flask.ext.login import login_user, logout_user
+from flask.ext.login import login_user, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from app import app
 from database import session
@@ -37,7 +37,14 @@ def index():
     pois = session.query(POI).all()
     for poi in pois:
         poi_list.append(poi.as_dictionary())
-    return render_template('index.html', poi_list=json.dumps(poi_list))
+
+    visited_list = []
+    if current_user.is_authenticated:
+        user = session.query(User).get(int(current_user.get_id()))
+        for assoc in user.poi_assocs:
+            visited_list.append(assoc.poi_id)
+    return render_template('index.html', poi_list=json.dumps(poi_list),
+        visited_list=json.dumps(visited_list))
 
 @app.route('/login', methods=['GET'])
 def login_get():

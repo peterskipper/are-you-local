@@ -35,7 +35,6 @@ class User(Base, UserMixin):
                 )
             )
 
-
 class UserPOI(Base):
     __tablename__ = 'user_poi_association'
     user_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
