@@ -4,18 +4,54 @@
 <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKebFAfOKsa5FAhljjyM2iJPd4nF6eBmk">
     </script>
-    <!--
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places"></script> -->
 <div id="map-canvas"></div>
 <script type="text/javascript">
     poi_list = {{ poi_list|safe }};
     poi_list = $.parseJSON(poi_list);
 </script>
 <script type="text/javascript">
+
+    var createMarkerClickListener = function(map, marker, poi) {
+        return function() {
+            var content = '<div class="info-window-content">'+
+            '<h3>' + poi["name"] + '</h3>' +
+            '<span class="info-window-category">' + 
+            poi["category"] + '</span>' +
+            '<h5 class="info-window-address">' + 
+            poi["address"] + '</h5>' +
+            '<p class="info-window-desc">' +
+            poi["desc"] + '</p>' +
+            '<input type="checkbox" id="info-window-vis-checkbox"/>' + 
+            '<span id="info-window-vis-text">I&#39ve been here!</span> ' +
+            '<div id="info-window-upvote" style="display:none">' +
+            '<h6>Upvote?</h6>' +
+            '<input type="radio" name="upvote" checked/>' +
+            '<span>It Was Awesome!</span>' +
+            '<input type="radio" name="upvote"/>' +
+            '<span>Nope</span>' +
+            '</div>' +
+            '</div>'
+
+            var infoWindow = new google.maps.InfoWindow({
+                content: content
+            });
+
+            google.maps.event.addListener(infoWindow, 'domready', function() {
+                $('#info-window-vis-checkbox').click(function() {
+                $('#info-window-upvote').toggle(this.checked);
+            });
+            });
+            
+
+            infoWindow.open(map, marker);
+        };
+    };
+
     var mapOptions = {
       center: { lat: 34.005, lng: -118.25},
       zoom: 11
     };
+
     var map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
     for (var i = 0; i < poi_list.length; i++) {
@@ -26,6 +62,8 @@
             icon: "{{ url_for('static', filename='images/')}}" + poi_list[i]["category"] + "_unvis.png"
 
         });
+
+        google.maps.event.addListener(marker, 'click', createMarkerClickListener(map, marker, poi_list[i]));
     }
 
 </script>
