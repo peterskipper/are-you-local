@@ -162,7 +162,7 @@ def all_pois():
         entry = poi_list[assoc.poi_id-1]
         entry["visited"] = True
         entry["upvote"] = assoc.upvote
-    return render_template('all_pois.html', poi_list=json.dumps(poi_list))
+    return render_template('all_pois.html', poi_list=poi_list)
     
 
 

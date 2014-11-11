@@ -12,25 +12,37 @@
 {% endmacro %}
 
 {% macro render_poi_list(poi) %}
-<tr>
-{% if poi.visited %}
-<td><input type="checkbox" name="poi" value="{{poi.id}}" checked /></td>
-{% else %}
-<td><input type="checkbox" name="poi" value="{{poi.id}}" /></td>
-{% endif %}
+<tr id="poi_{{poi.id}}">
+
 <td>
-<div class="btn-group" data-toggle="buttons">
-{% if poi.upvote == None %}
-<label class="btn btn-default glyphicon glyphicon-thumbs-up"><input type="radio" name="upvote" value="1"></label>
-<label class="btn btn-default glyphicon glyphicon-thumbs-down"><input type="radio" name="upvote" value="0"></label>
-{% elif poi.upvote == True %}
-
+{% if poi.visited %}
+    <span class="glyphicon glyphicon-ok"></span><span style="display:none">1</span>
 {% else %}
-
+    <span class="glyphicon glyphicon-remove"></span><span style="display:none">0</span>
 {% endif %}
-</div>
 </td>
 
+<td>
+{% if poi.upvote == None %}
+    <span class="glyphicon glyphicon-question-sign"></span><span style="display:none">0</span>
+{% elif poi.upvote == True %}
+    <span class="glyphicon glyphicon-thumbs-up"></span><span style="display:none">2</span>
+{% else %}
+    <span class="glyphicon glyphicon-thumbs-down"></span><span style="display:none">1</span>
+{% endif %}
+</td>
+
+<td>
+    {{poi.name}}    
+</td>
+
+<td class="uppercase">
+    {{poi.category}}    
+</td>
+
+<td>
+    <a href="#">{{poi.address}}</a>
+</td>
 
 </tr>
 {% endmacro %}

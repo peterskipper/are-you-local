@@ -61,5 +61,60 @@ button.info-window {
   margin-top: 10px;
 }
 
+/* List CSS */ 
+.uppercase {
+  text-transform: uppercase;
+}
 
+/*::selection { background: #5f74a0; color: #fff; }
+::-moz-selection { background: #5f74a0; color: #fff; }
+::-webkit-selection { background: #5f74a0; color: #fff; }
+*/
+table { border-collapse: collapse; border-spacing: 0; }
 
+h1 { 
+  font-weight: bold;
+  font-size: 3.6em;
+  line-height: 1.7em;
+  margin-bottom: 10px;
+}
+
+#all_pois {
+  margin: 0 auto;
+  font-size: 1.2em;
+  margin-bottom: 15px;
+}
+#all_pois thead {
+  cursor: pointer;
+}
+#all_pois thead tr th { 
+  font-weight: bold;
+  padding: 12px 30px;
+  padding-left: 42px;
+}
+
+#all_pois thead tr {
+    background: #d3d3d3;
+}
+
+#all_pois thead tr th span { 
+  padding-right: 20px;
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+}
+
+#all_pois thead tr th.tablesorter-headerAsc, #all_pois thead tr th.tablesorter-headerDesc {
+  background: #acc8dd;
+}
+
+#all_pois thead tr th.tablesorter-headerAsc span {
+  background-image: url('/static/images/arrow_up.png');
+}
+#all_pois thead tr th.tablesorter-headerDesc span {
+  background-image: url('/static/images/arrow_down.png');
+}
+
+#all_pois tbody tr td {
+  text-align: center;
+  padding: 15px 10px;
+}

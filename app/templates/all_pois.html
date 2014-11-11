@@ -1,5 +1,30 @@
 {% extends "base.html" %}
+{% from "macros.html" import render_poi_list %}
 
 {% block content %}
+<h1>All Places</h1>
+<table id="all_pois" class="table table-hover" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr>
+            <th><span>Visited</span></th>
+            <th><span>Upvote?</span></th>
+            <th><span>Name</span></th>
+            <th><span>Category</span></th>
+            <th><span>Address</span></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for poi in poi_list %}
+            {{render_poi_list(poi)}}
+        {% endfor %}
+    </tbody>
+</table>
 
+<!--TableSorter JQuery Plugin -->
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery.tablesorter.min.js')}}"></script>
+<script type="text/javascript">
+    $(function(){
+  $('#all_pois').tablesorter(); 
+});
+</script>
 {% endblock %}
