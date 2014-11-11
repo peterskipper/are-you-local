@@ -6,7 +6,7 @@ from flask.ext.login import login_user, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from app import app
 from database import session
-from models import User, POI
+from models import User, POI, UserPOI
 from forms import LoginForm, RegistrationForm, POIForm
 
 # Helper func for the views with forms
@@ -19,11 +19,9 @@ def flash_errors(form):
 #Helper func to get Lat/Long from address
 def geocode(address):
     address = urllib.quote_plus(address)
-    print address
     request = ("http://maps.googleapis.com/maps/api/geocode/json?address={}&"
         "sensor=false".format(address))
     data = json.loads(urllib.urlopen(request).read())
-    print data
     if data['status'] == 'OK':
         lat = data['results'][0]['geometry']['location']['lat']
         lng = data['results'][0]['geometry']['location']['lng']
@@ -31,7 +29,7 @@ def geocode(address):
     else:
         return '',''
 
-@app.route('/')
+@app.route('/', methods=["GET"])
 def index():
     poi_list =[]
     pois = session.query(POI).all()
@@ -45,6 +43,16 @@ def index():
             visited_list.append(assoc.poi_id)
     return render_template('index.html', poi_list=json.dumps(poi_list),
         visited_list=json.dumps(visited_list))
+
+@app.route('/', methods=['POST'])
+def index_post():
+    upvote = int(request.form['upvote'])
+    user = session.query(User).get(int(current_user.get_id()))
+    poi = session.query(POI).get(int(request.form['poi_id']))
+    user.poi_assocs.append(UserPOI(poi=poi, upvote=upvote))
+    session.commit()
+    return redirect(url_for('index'))
+    
 
 @app.route('/login', methods=['GET'])
 def login_get():
