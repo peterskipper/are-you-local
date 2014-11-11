@@ -42,6 +42,15 @@ class UserPOI(Base):
     upvote = Column(Boolean)
     user = relationship('User', backref=backref('poi_assocs'))
     poi = relationship('POI', backref=backref('user_assocs'))
+
+    def __repr__(self):
+        return ('user_id is {}; '
+            'poi_id is {}; '
+            'upvote is {}; '
+            .format(self.user_id,
+                self.poi_id,
+                self.upvote)
+            )
     
 class POI(Base):
     """

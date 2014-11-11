@@ -1,6 +1,7 @@
 import urllib
 import json
 import decimal
+from sqlalchemy import func
 from flask import render_template, url_for, request, flash, redirect
 from flask.ext.login import login_user, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -44,6 +45,7 @@ def index():
     return render_template('index.html', poi_list=json.dumps(poi_list),
         visited_list=json.dumps(visited_list))
 
+#@login_required?
 @app.route('/', methods=['POST'])
 def index_post():
     upvote = int(request.form['upvote'])
@@ -137,3 +139,30 @@ def add_poi_post():
     else:
         flash_errors(form)
         return render_template('add_poi.html', form=form)
+
+@app.route('/top_ten')
+def top_ten():
+    import pdb
+    pdb.set_trace()
+    result = session.query(func.sum(UserPOI.upvote), UserPOI.upvote).group_by(UserPOI.poi_id).all()
+    return render_template('top_ten.html', result=result)
+
+#@login_required
+@app.route('/all_pois')
+def all_pois():
+    poi_list =[]
+    pois = session.query(POI).all()
+    for poi in pois:
+        entry = poi.as_dictionary()
+        entry["visited"] = False
+        entry["upvote"] = None
+        poi_list.append(entry)
+    user = session.query(User).get(int(current_user.get_id()))
+    for assoc in user.poi_assocs:
+        entry = poi_list[assoc.poi_id-1]
+        entry["visited"] = True
+        entry["upvote"] = assoc.upvote
+    return render_template('all_pois.html', poi_list=json.dumps(poi_list))
+    
+
+
