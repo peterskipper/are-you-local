@@ -41,7 +41,7 @@
 </td>
 
 <td>
-    <a href="#">{{poi.address}}</a>
+    <a href="{{url_for('index')}}?marker_id=marker_{{poi.id}}">{{poi.address}}</a>
 </td>
 
 </tr>
@@ -59,7 +59,7 @@
 </td>
 
 <td>
-    <a href="">{{poi.name}}</a>
+    <a href="{{url_for('index')}}?marker_id=marker_{{poi.id}}">{{poi.name}}</a>
 </td>
 
 <td class="uppercase">

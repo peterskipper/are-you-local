@@ -14,7 +14,12 @@
     visited_list = $.parseJSON(visited_list);
 </script>
 <script type="text/javascript">
-
+    var getParameterByName = function(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
     var createMarkerClickListener = function(map, marker, poi) {
         return function() {
             var shortContent = '<div id="info-window-content">'+
@@ -55,6 +60,7 @@
 
             var infoWindow = new google.maps.InfoWindow();
             infoWindow.setContent(shortContent);
+            map.panTo(marker.getPosition())
 
             google.maps.event.addListener(infoWindow, 'domready', function() {
                 $('#info-window-vis-checkbox').click(function(event) {
@@ -77,6 +83,7 @@
         };
     };
 
+    var marker_id = getParameterByName('marker_id')
     var mapOptions = {
       center: { lat: 34.005, lng: -118.25},
       zoom: 11
@@ -99,9 +106,19 @@
             icon: "{{ url_for('static', filename='images/')}}" + poi_list[i]["category"] + img_suffix
 
         });
-
+        marker.set("id", "marker_" + poi_list[i]["id"])
+        if (marker.get("id") === marker_id ) {
+            var savedMarker = marker;
+        }
         google.maps.event.addListener(marker, 'click', createMarkerClickListener(map, marker, poi_list[i]));
     }
+
+    //Test for query parameter
+    if (savedMarker) {
+        google.maps.event.trigger(savedMarker, 'click')
+    }
+    
+
 
 </script>
 {% endblock %}
