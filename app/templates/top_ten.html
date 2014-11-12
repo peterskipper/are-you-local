@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% from "macros.html" import render_top_ten_list %}
+
+{% block content %}
+<h1>Top Ten List</h1>
+<table id="top_ten_table" class="table table-striped" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Visited</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Total Upvotes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for poi in top_ten %}
+            {{ render_top_ten_list(poi) }}
+        {% endfor %}
+    </tbody>
+</table>
+<div id="congrats" style="display:none">
+<h2>Wow!</h2>
+<p>You've completed all of the top ten activities.  You're officially a local :)</p>  
+</div>
+<script type="text/javascript">
+    var total = $(".achieved").length
+    if (total === 10) {
+        $("#congrats").toggle()
+    }
+</script>
+{% endblock %}

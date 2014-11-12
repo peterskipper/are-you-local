@@ -6,7 +6,7 @@ from flask import render_template, url_for, request, flash, redirect
 from flask.ext.login import login_user, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from app import app
-from database import session
+from database import session, engine
 from models import User, POI, UserPOI
 from forms import LoginForm, RegistrationForm, POIForm
 
@@ -33,7 +33,7 @@ def geocode(address):
 @app.route('/', methods=["GET"])
 def index():
     poi_list =[]
-    pois = session.query(POI).all()
+    pois = session.query(POI).order_by(POI.id).all()
     for poi in pois:
         poi_list.append(poi.as_dictionary())
 
@@ -140,18 +140,45 @@ def add_poi_post():
         flash_errors(form)
         return render_template('add_poi.html', form=form)
 
+#@login_required
 @app.route('/top_ten')
 def top_ten():
-    import pdb
-    pdb.set_trace()
-    result = session.query(func.sum(UserPOI.upvote), UserPOI.upvote).group_by(UserPOI.poi_id).all()
-    return render_template('top_ten.html', result=result)
+    # Construct basic list
+    poi_list = []
+    pois = session.query(POI).order_by(POI.id).all()
+    for poi in pois:
+        entry = poi.as_dictionary()
+        entry["total_upvotes"] = 0
+        entry["visited"] = False
+        poi_list.append(entry)
+    
+    # Add in total upvotes via SQL query
+    sql = ('SELECT poi_id, SUM(upvote) ' 
+        'FROM user_poi_association '
+        'GROUP BY poi_id '
+        'ORDER BY poi_id;'
+        )
+    query_result = engine.execute(sql)
+    for row in query_result:
+        poi_list[row[0]-1]["total_upvotes"] = row[1]
+
+    # Add in places User has visited
+    user = session.query(User).get(int(current_user.get_id()))
+    for assoc in user.poi_assocs:
+        entry = poi_list[assoc.poi_id-1]
+        entry["visited"] = True
+    
+    # Sort and return the Top Ten
+    top_ten = sorted(poi_list, 
+        key=lambda k: k['total_upvotes'], 
+        reverse=True)[:10]  
+    return render_template('top_ten.html', top_ten=top_ten)
 
 #@login_required
 @app.route('/all_pois')
 def all_pois():
     poi_list =[]
-    pois = session.query(POI).all()
+    pois = session.query(POI).order_by(POI.id).all()
     for poi in pois:
         entry = poi.as_dictionary()
         entry["visited"] = False

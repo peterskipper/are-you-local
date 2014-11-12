@@ -46,3 +46,28 @@
 
 </tr>
 {% endmacro %}
+
+{% macro render_top_ten_list(poi) %}
+<tr id="top_ten_{{poi.id}}">
+
+<td>
+{% if poi.visited %}
+    <span class="glyphicon glyphicon-ok"><span class="achieved" style="display:none"></span></span>
+{% else %}
+    <span class="glyphicon glyphicon-remove"></span>
+{% endif %}
+</td>
+
+<td>
+    <a href="">{{poi.name}}</a>
+</td>
+
+<td class="uppercase">
+    {{poi.category}}    
+</td>
+
+<td>
+    {{poi.total_upvotes}}
+</td>
+</tr>
+{% endmacro %}
