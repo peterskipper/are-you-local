@@ -10,10 +10,6 @@
     poi_list = $.parseJSON(poi_list);  
 </script>
 <script type="text/javascript">
-    visited_list = {{ visited_list|safe }};
-    visited_list = $.parseJSON(visited_list);
-</script>
-<script type="text/javascript">
     var getParameterByName = function(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -22,6 +18,23 @@
 }
     var createMarkerClickListener = function(map, marker, poi) {
         return function() {
+            var checkbox, radio_yes, radio_no;
+            if (poi["visited"]) {
+                checkbox = '<input type="checkbox" id="info-window-vis-checkbox" checked/>'
+                if (poi["upvote"]) {
+                    radio_yes = '<input type="radio" name="upvote" value= "1" class="info-window-form-input" checked/>'
+                    radio_no = '<input type="radio" name="upvote" value="0" class="info-window-form-input"/>'
+                }
+                else {
+                    radio_yes = '<input type="radio" name="upvote" value= "1" class="info-window-form-input"/>'
+                    radio_no = '<input type="radio" name="upvote" value="0" class="info-window-form-input" checked/>'
+                }
+            }
+            else {
+                checkbox = '<input type="checkbox" id="info-window-vis-checkbox"/>';
+                radio_yes = '<input type="radio" name="upvote" value= "1" class="info-window-form-input" checked/>';
+                radio_no = '<input type="radio" name="upvote" value="0" class="info-window-form-input"/>';
+            }
             var shortContent = '<div id="info-window-content">'+
             '<h4>' + poi["name"] + '</h4>' +
             '<span class="info-window-category">' + 
@@ -30,7 +43,7 @@
             poi["address"] + '</h5>' +
             '<p class="info-window-desc">' +
             poi["desc"] + '</p>' +
-            '<input type="checkbox" id="info-window-vis-checkbox"/>' + 
+            checkbox + 
             '<span id="info-window-vis-text">I&#39ve been here!</span> ' +
             '</div>'
 
@@ -48,9 +61,9 @@
             '<h6>Upvote?</h6>' +
             '<form action="/" method="POST">' +
             '<input type="hidden" name="poi_id" value="' + poi["id"] +'" />' +
-            '<input type="radio" name="upvote" value= "1" class="info-window-form-input" checked/>' +
+            radio_yes +
             '<span class="info-window-form-span">It Was Awesome!</span>' +
-            '<input type="radio" name="upvote" value="0" class="info-window-form-input"/>' +
+            radio_no +
             '<span class="info-window-form-span">Nope</span><br />' +
             '<button type="submit" class="btn btn-primary btn-sm info-window">' +
             'Submit</button>' +
@@ -59,7 +72,12 @@
             '</div>'
 
             var infoWindow = new google.maps.InfoWindow();
-            infoWindow.setContent(shortContent);
+            if (poi["visited"]) {
+                infoWindow.setContent(longContent);
+            }
+            else {
+                infoWindow.setContent(shortContent)
+            }
             map.panTo(marker.getPosition())
 
             google.maps.event.addListener(infoWindow, 'domready', function() {
@@ -93,7 +111,7 @@
         mapOptions);
     for (var i = 0; i < poi_list.length; i++) {
         var img_suffix;
-        if (visited_list.indexOf(poi_list[i]["id"]) > -1) {
+        if (poi_list[i]["visited"]) {
             img_suffix = "_vis.png";
         }
         else {

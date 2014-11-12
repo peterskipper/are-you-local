@@ -35,15 +35,18 @@ def index():
     poi_list =[]
     pois = session.query(POI).order_by(POI.id).all()
     for poi in pois:
-        poi_list.append(poi.as_dictionary())
+        entry = poi.as_dictionary()
+        entry["visited"] = False
+        entry["upvote"] = None
+        poi_list.append(entry)
 
-    visited_list = []
     if not current_user.is_anonymous():
         user = session.query(User).get(int(current_user.get_id()))
         for assoc in user.poi_assocs:
-            visited_list.append(assoc.poi_id)
-    return render_template('index.html', poi_list=json.dumps(poi_list),
-        visited_list=json.dumps(visited_list))
+            entry = poi_list[assoc.poi_id-1]
+            entry["visited"] = True
+            entry["upvote"] = assoc.upvote
+    return render_template('index.html', poi_list=json.dumps(poi_list))
 
 #@login_required?
 @app.route('/', methods=['POST'])
