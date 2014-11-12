@@ -2,7 +2,7 @@
 
 from flask import url_for
 from flask.ext.login import UserMixin
-from sqlalchemy import Column, Boolean, Integer, Float, String, Sequence, ForeignKey, Table
+from sqlalchemy import Column, Integer, Float, String, Sequence, ForeignKey, Table
 from sqlalchemy.orm import relationship, backref
 
 from app import app
@@ -39,7 +39,7 @@ class UserPOI(Base):
     __tablename__ = 'user_poi_association'
     user_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
     poi_id = Column(Integer, ForeignKey('poi.id'), primary_key=True)
-    upvote = Column(Boolean)
+    upvote = Column(Integer)
     user = relationship('User', backref=backref('poi_assocs'))
     poi = relationship('POI', backref=backref('user_assocs'))
 

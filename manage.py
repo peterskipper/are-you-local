@@ -79,11 +79,11 @@ def re_seed():
     session.add_all([user1, user2])
     session.commit()
 
-    user1.poi_assocs.append(UserPOI(poi=lacma, upvote=False))
-    user1.poi_assocs.append(UserPOI(poi=venice, upvote=True))
-    user2.poi_assocs.append(UserPOI(poi=venice, upvote=True))
-    user2.poi_assocs.append(UserPOI(poi=baco, upvote=True))
-    user2.poi_assocs.append(UserPOI(poi=barber, upvote=True))
+    user1.poi_assocs.append(UserPOI(poi=lacma, upvote=0))
+    user1.poi_assocs.append(UserPOI(poi=venice, upvote=1))
+    user2.poi_assocs.append(UserPOI(poi=venice, upvote=1))
+    user2.poi_assocs.append(UserPOI(poi=baco, upvote=1))
+    user2.poi_assocs.append(UserPOI(poi=barber, upvote=1))
     session.commit()
 
 if __name__ == '__main__':

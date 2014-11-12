@@ -74,11 +74,14 @@
             var infoWindow = new google.maps.InfoWindow();
             if (poi["visited"]) {
                 infoWindow.setContent(longContent);
+                var shiftPos = new google.maps.LatLng(marker.getPosition().lat()+0.1, marker.getPosition().lng());
+                map.panTo(shiftPos);
             }
             else {
-                infoWindow.setContent(shortContent)
+                infoWindow.setContent(shortContent);
+                map.panTo(marker.getPosition());
             }
-            map.panTo(marker.getPosition())
+            
 
             google.maps.event.addListener(infoWindow, 'domready', function() {
                 $('#info-window-vis-checkbox').click(function(event) {
