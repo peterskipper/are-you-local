@@ -3,7 +3,7 @@ import json
 import decimal
 from sqlalchemy import func
 from flask import render_template, url_for, request, flash, redirect
-from flask.ext.login import login_user, logout_user, current_user
+from flask.ext.login import login_user, logout_user, current_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 from app import app
 from database import session, engine
@@ -32,23 +32,26 @@ def geocode(address):
 
 @app.route('/', methods=["GET"])
 def index():
-    poi_list =[]
     pois = session.query(POI).order_by(POI.id).all()
+
+    # Add in User info, if applicable
+    user_dict = {}
+    if not current_user.is_anonymous():
+        tuples = session.query(UserPOI.poi_id, UserPOI.upvote).filter_by(
+            user_id = int(current_user.get_id())).order_by(UserPOI.poi_id)
+        for key, val in tuples:
+            user_dict[key] = val
+    
+    poi_list =[]
     for poi in pois:
         entry = poi.as_dictionary()
-        entry["visited"] = False
-        entry["upvote"] = None
+        entry["visited"] = poi.id in user_dict
+        entry["upvote"] = user_dict[poi.id] if poi.id in user_dict else None
         poi_list.append(entry)
 
-    if not current_user.is_anonymous():
-        user = session.query(User).get(int(current_user.get_id()))
-        for assoc in user.poi_assocs:
-            entry = poi_list[assoc.poi_id-1]
-            entry["visited"] = True
-            entry["upvote"] = assoc.upvote
     return render_template('index.html', poi_list=json.dumps(poi_list))
 
-#@login_required?
+@login_required
 @app.route('/', methods=['POST'])
 def index_post():
     upvote = int(request.form['upvote'])
@@ -80,6 +83,7 @@ def login_post():
     flash('Logged in successfully!', 'success')
     return redirect(request.args.get('next') or url_for('index'))
 
+@login_required
 @app.route('/logout')
 def logout():
     logout_user()
@@ -118,6 +122,7 @@ def add_poi_get():
     form = POIForm(request.args, category=0)
     return render_template('add_poi.html', form=form)
 
+@login_required
 @app.route('/add_poi', methods=['POST'])
 def add_poi_post():
     form = POIForm(request.form)
@@ -132,6 +137,9 @@ def add_poi_post():
                 desc=form.desc.data)
             session.add(poi)
             session.commit()
+            user = session.query(User).get(int(current_user.get_id()))
+            user.poi_assocs.append(UserPOI(poi=poi, upvote=1))
+            session.commit()
             flash('You added a new place!', 'success')
             return redirect(url_for('index'))
         else:
@@ -143,55 +151,59 @@ def add_poi_post():
         flash_errors(form)
         return render_template('add_poi.html', form=form)
 
-#@login_required
 @app.route('/top_ten')
 def top_ten():
-    # Construct basic list
-    poi_list = []
-    pois = session.query(POI).order_by(POI.id).all()
-    for poi in pois:
-        entry = poi.as_dictionary()
-        entry["total_upvotes"] = 0
-        entry["visited"] = False
-        poi_list.append(entry)
-    
-    # Add in total upvotes via SQL query
-    sql = ('SELECT poi_id, SUM(upvote) ' 
-        'FROM user_poi_association '
-        'GROUP BY poi_id '
-        'ORDER BY poi_id;'
-        )
-    query_result = engine.execute(sql)
-    for row in query_result:
-        poi_list[row[0]-1]["total_upvotes"] = row[1]
+    result = session.query(POI.id, POI.category, POI.name, func.sum(UserPOI.upvote)
+        ).join(UserPOI).group_by(POI.id).order_by(POI.id)
+        
+    # Add in User info, if applicable
+    user_visited = []
+    if not current_user.is_anonymous():
+        user = session.query(User).get(int(current_user.get_id()))
+        for assoc in user.poi_assocs:
+            user_visited.append(assoc.poi_id)
 
-    # Add in places User has visited
-    user = session.query(User).get(int(current_user.get_id()))
-    for assoc in user.poi_assocs:
-        entry = poi_list[assoc.poi_id-1]
-        entry["visited"] = True
-    
+    poi_list = []
+    for row in result:
+        entry = {
+            "id": row[0],
+            "category": row[1],
+            "name": row[2],
+            "total_upvotes": row[3],
+            "visited": row[0] in user_visited
+        }
+        poi_list.append(entry)
+
     # Sort and return the Top Ten
     top_ten = sorted(poi_list, 
         key=lambda k: k['total_upvotes'], 
         reverse=True)[:10]  
     return render_template('top_ten.html', top_ten=top_ten)
 
-#@login_required
 @app.route('/all_pois')
 def all_pois():
+    pois = session.query(POI.id, POI.name, POI.category, POI.address).order_by(POI.id).all()
+
+    # Add in User info, if applicable
+    user_dict = {}
+    if not current_user.is_anonymous():
+        tuples = session.query(UserPOI.poi_id, UserPOI.upvote).filter_by(
+            user_id = int(current_user.get_id())).order_by(UserPOI.poi_id)
+        for key, val in tuples:
+            user_dict[key] = val
+
     poi_list =[]
-    pois = session.query(POI).order_by(POI.id).all()
     for poi in pois:
-        entry = poi.as_dictionary()
-        entry["visited"] = False
-        entry["upvote"] = None
+        entry = {
+            "id": poi.id,
+            "name": poi.name,
+            "category": poi.category,
+            "address": poi.address,
+            "visited": poi.id in user_dict,
+            "upvote": user_dict[poi.id] if poi.id in user_dict else None
+        }
         poi_list.append(entry)
-    user = session.query(User).get(int(current_user.get_id()))
-    for assoc in user.poi_assocs:
-        entry = poi_list[assoc.poi_id-1]
-        entry["visited"] = True
-        entry["upvote"] = assoc.upvote
+
     return render_template('all_pois.html', poi_list=poi_list)
     
 

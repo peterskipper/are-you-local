@@ -6,7 +6,7 @@
 <table id="all_pois" class="table table-hover" cellpadding="0" cellspacing="0">
     <thead>
         <tr>
-            <th><span>Visited</span></th>
+            <th><span id="th_visited">Visited</span></th>
             <th><span>Upvote?</span></th>
             <th><span>Name</span></th>
             <th><span>Category</span></th>
@@ -24,7 +24,8 @@
 <script type="text/javascript" src="{{url_for('static', filename='js/jquery.tablesorter.min.js')}}"></script>
 <script type="text/javascript">
     $(function(){
-  $('#all_pois').tablesorter(); 
+  $('#all_pois').tablesorter();
 });
 </script>
+
 {% endblock %}

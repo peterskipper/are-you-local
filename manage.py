@@ -84,6 +84,8 @@ def re_seed():
     user2.poi_assocs.append(UserPOI(poi=venice, upvote=1))
     user2.poi_assocs.append(UserPOI(poi=baco, upvote=1))
     user2.poi_assocs.append(UserPOI(poi=barber, upvote=1))
+    user2.poi_assocs.append(UserPOI(poi=lacma, upvote=1))
+    user2.poi_assocs.append(UserPOI(poi=jumbo, upvote=1))
     session.commit()
 
 if __name__ == '__main__':
