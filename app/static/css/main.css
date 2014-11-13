@@ -118,6 +118,23 @@ h1 {
   text-align: center;
   padding: 15px 10px;
 }
+
+#top_ten_table {
+  margin: 0 auto;
+  font-size: 1.2em;
+  margin-bottom: 15px;
+}
+
+#top_ten_table thead tr th { 
+  font-weight: bold;
+  padding: 12px 10px;
+}
+
+#top_ten_table thead tr {
+    background: #d3d3d3;
+}
+
+/* About CSS*/
 .about{
   margin-top: -10px;
 }
