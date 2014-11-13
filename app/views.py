@@ -51,8 +51,9 @@ def index():
 
     return render_template('index.html', poi_list=json.dumps(poi_list))
 
-@login_required
+
 @app.route('/', methods=['POST'])
+@login_required
 def index_post():
     upvote = int(request.form['upvote'])
     user = session.query(User).get(int(current_user.get_id()))
@@ -83,8 +84,9 @@ def login_post():
     flash('Logged in successfully!', 'success')
     return redirect(request.args.get('next') or url_for('index'))
 
-@login_required
+
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
     flash('Logged out successfully!', 'success')
@@ -122,8 +124,9 @@ def add_poi_get():
     form = POIForm(request.args, category=0)
     return render_template('add_poi.html', form=form)
 
-@login_required
+
 @app.route('/add_poi', methods=['POST'])
+@login_required
 def add_poi_post():
     form = POIForm(request.form)
     if form.validate():
