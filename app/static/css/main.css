@@ -93,8 +93,9 @@ h1 {
   padding-left: 42px;
 }
 
-#all_pois thead tr {
+#all_pois thead tr th {
     background: #d3d3d3;
+    border-bottom: 0px;
 }
 
 #all_pois thead tr th span { 

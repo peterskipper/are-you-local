@@ -24,7 +24,10 @@
 <script type="text/javascript" src="{{url_for('static', filename='js/jquery.tablesorter.min.js')}}"></script>
 <script type="text/javascript">
     $(function(){
-  $('#all_pois').tablesorter();
+  $('#all_pois').tablesorter({
+    sortList: [[0,0]]
+  });
+  $('#th_visited').click();
 });
 </script>
 
