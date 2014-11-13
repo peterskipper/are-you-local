@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div width="100%">
+<img src="{{url_for('static', filename='images/LosAngeles.jpg')}}" width="350px", height="500px" id="LAPic">
+<h1 class="about">About</h1>
+
+<p class="about about_p">When I first moved to New York, I was told that I was not a local until I had a go-to brunch place (I was also told that I didn't know how to pronounce &quot;Houston&quot;). Sometimes it can be difficult to get your bearings in a new place.</p>
+
+<p class="about about_p">This website is an attempt to make getting to know Los Angeles a little easier, and hopefully more fun. The homepage displays a map with icons for different types of activities: <strong>ACTIVE</strong>, <strong>ARTS/ENTERTAINMENT</strong>, <strong>FOOD</strong>, <strong>DRINK</strong>, and <strong>OTHER</strong>. Click on an icon to learn more about it, or view all the places in List form by clicking on the link above.</p>
+
+<p class="about about_p">Users log in and add new places to visit via the &quot;Add a Place&quot; button. You can acknowledge that you've visited a place and up/down vote it from the main map.  The &quot;Top Ten&quot; link considers all the upvotes and ranks the ten most popular places to visit in Los Angeles. Make it to all ten and you're officially a local (and you'll unlock a special prize)!</p>
+
+<h3 class="about about_h3">Happy Exploring...</h3>
+</div>
+{% endblock %}

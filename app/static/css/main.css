@@ -118,3 +118,19 @@ h1 {
   text-align: center;
   padding: 15px 10px;
 }
+.about{
+  margin-top: -10px;
+}
+
+.about_p {
+  margin-bottom: 25px;
+  text-align: justify;
+}
+
+#LAPic {
+  float: right;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+
+
