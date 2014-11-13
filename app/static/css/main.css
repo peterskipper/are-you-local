@@ -134,6 +134,17 @@ h1 {
     background: #d3d3d3;
 }
 
+.pad-left-icon {
+  padding-left: 25px;
+}
+
+.pad-left-category {
+  padding-left: 5px;
+}
+.pad-left-upvote {
+  padding-left: 55px;
+}
+
 /* About CSS*/
 .about{
   margin-top: -10px;

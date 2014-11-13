@@ -52,9 +52,9 @@
 
 <td>
 {% if poi.visited %}
-    <span class="glyphicon glyphicon-ok"><span class="achieved" style="display:none"></span></span>
+    <span class="glyphicon glyphicon-ok pad-left-icon"><span class="achieved" style="display:none"></span></span>
 {% else %}
-    <span class="glyphicon glyphicon-remove"></span>
+    <span class="glyphicon glyphicon-remove pad-left-icon"></span>
 {% endif %}
 </td>
 
@@ -63,11 +63,11 @@
 </td>
 
 <td class="uppercase">
-    {{poi.category}}    
+    <span class="pad-left-category">{{poi.category}}</span>    
 </td>
 
 <td>
-    {{poi.total_upvotes}}
+    <span class="pad-left-upvote">{{poi.total_upvotes}}</span>
 </td>
 </tr>
 {% endmacro %}
