@@ -111,7 +111,7 @@
 
     var map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
-    var infoWindow = new google.maps.InfoWindow();
+    var infoWindow = new google.maps.InfoWindow({maxWidth: 300});
     for (var i = 0; i < poi_list.length; i++) {
         var img_suffix;
         if (poi_list[i]["visited"]) {
