@@ -1,3 +1,4 @@
 *.py[cod]
 env
 setup_app.sh*
+Procfile~

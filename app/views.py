@@ -58,6 +58,16 @@ def index_post():
     upvote = int(request.form['upvote'])
     user = session.query(User).get(int(current_user.get_id()))
     poi = session.query(POI).get(int(request.form['poi_id']))
+    vote = session.query(UserPOI).filter_by(user = user).filter_by(
+        poi = poi).first()
+    if vote: 
+        if vote.upvote == upvote:
+            flash('You cannot upvote/downvote the same place twice!', 'warning')
+            return redirect(url_for('index'))
+        else: 
+            vote.upvote = upvote
+            session.commit()
+            return redirect(url_for('index'))
     user.poi_assocs.append(UserPOI(poi=poi, upvote=upvote))
     session.commit()
     return redirect(url_for('index'))
@@ -101,17 +111,26 @@ def register_get():
 def register_post():
     form = RegistrationForm(request.form)
     if form.validate():
-        user = User(username=form.username.data,
+        user = session.query(User).filter_by(username=form.username.data).first()
+        if user:
+            flash('That username is already in use', 'danger')
+            return redirect(url_for('register_get'))
+        user = session.query(User).filter_by(email=form.email.data).first()
+        if user:
+            flash('That email is already in use', 'danger')
+            return redirect(url_for('register_get'))
+        
+        newuser = User(username=form.username.data,
                 email=form.email.data,
                 password=generate_password_hash(form.password.data)
                 )
         if form.fname.data and form.lname.data:
-            user.realname = form.fname.data + form.lname.data
+            newuser.realname = form.fname.data + form.lname.data
         elif form.fname.data:
-            user.realname = form.fname.data
+            newuser.realname = form.fname.data
         elif form.lname.data:
-            user.realname = form.lname.data
-        session.add(user)
+            newuser.realname = form.lname.data
+        session.add(newuser)
         session.commit()
         flash('Thanks for registering!', 'success')
         return redirect(url_for('login_get'))
@@ -130,6 +149,10 @@ def add_poi_get():
 def add_poi_post():
     form = POIForm(request.form)
     if form.validate():
+        location = session.query(POI).filter_by(address=form.address.data).first()
+        if location:
+            flash('That location is already in the database!', 'warning')
+            return redirect(url_for('add_poi_get'))
         lat, lng = geocode(form.address.data)
         if lat and lng:
             poi = POI(name=form.name.data,
